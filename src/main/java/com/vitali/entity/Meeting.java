@@ -21,7 +21,6 @@ public class Meeting extends DataEntity implements Serializable {
     @Column(name = "first_name")
     private String firstName;
     @ManyToMany(mappedBy = "meetings")
-    @ToString.Exclude
     private Set<Employee> employees = new HashSet<>();
 
     @Override
