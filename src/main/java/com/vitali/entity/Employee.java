@@ -1,9 +1,6 @@
 package com.vitali.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,17 +8,16 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Builder
 @Table
-public class Employee implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "employee_id")
-    private Integer employeeId;
+public class Employee extends DataEntity implements Serializable {
+
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -31,6 +27,7 @@ public class Employee implements Serializable {
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "employee",
     cascade = CascadeType.ALL)
+    @ToString.Exclude
     private EmployeeDetails employeeDetails;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -40,6 +37,7 @@ public class Employee implements Serializable {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "employee_meeting", joinColumns = {@JoinColumn(name = "employee_id")},
                 inverseJoinColumns = {@JoinColumn(name = "meeting_id")})
+    @ToString.Exclude
     private Set<Meeting> meetings = new HashSet<>();
 
 
@@ -48,11 +46,11 @@ public class Employee implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return Objects.equals(employeeId, employee.employeeId);
+        return Objects.equals(getId(), employee.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(employeeId);
+        return Objects.hash(getId());
     }
 }

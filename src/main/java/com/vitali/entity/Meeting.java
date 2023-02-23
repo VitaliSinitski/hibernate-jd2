@@ -11,16 +11,13 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString(exclude = "employees")
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table
-public class Meeting implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "meeting_id")
-    private Integer meetingId;
+public class Meeting extends DataEntity implements Serializable {
+
     @Column(name = "first_name")
     private String firstName;
     @ManyToMany(mappedBy = "meetings")
@@ -32,11 +29,11 @@ public class Meeting implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Meeting meeting = (Meeting) o;
-        return Objects.equals(meetingId, meeting.meetingId);
+        return Objects.equals(getId(), meeting.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(meetingId);
+        return Objects.hash(getId());
     }
 }

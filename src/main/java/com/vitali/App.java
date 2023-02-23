@@ -5,7 +5,11 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -62,11 +66,11 @@ public class App {
         EmployeeDetails employeeDetails = new EmployeeDetails(null,
                 "City", "Country", "State", "Street", null);
 
-        Meeting meeting = new Meeting(null, "Jack", null);
+        Meeting meeting = new Meeting("Jack", null);
         Set<Meeting> setMeeting = new HashSet<>();
         setMeeting.add(meeting);
 
-        Employee employee = new Employee(null, "First Name",
+        Employee employee = new Employee("First Name",
                 "Last Name", "Cell Phone", employeeDetails, department, setMeeting);
 
         Set<Employee> setEmployee = new HashSet<>();
@@ -79,7 +83,7 @@ public class App {
         em.persist(employeeDetails);
         em.getTransaction().commit();
 
-        System.out.println(employee);
+//        System.out.println(employee);
 
 
 //        em.getTransaction().begin();
@@ -93,6 +97,25 @@ public class App {
 //        Employee employee2 = em.find(Employee.class, 2);
 //        em.getTransaction().commit();
 //        employee2.getDepartment(); // департамент может достать пока есть соединение с бд
+
+
+        em = HibernateUtil.getEntityManager();
+
+//        javax.persistence.Query query = em.createQuery(
+//                "from Employee e where e.firstName= :name");
+//
+//        query.setParameter("name", "First Name")
+//                        .getResultList().forEach(System.out::println);
+
+
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Employee> criteria = builder.createQuery(Employee.class);
+        Root<Employee> root = criteria.from(Employee.class);
+        criteria.select(root).where(builder.equal(root.get("firstName"), "First Name"));
+        List<Employee> resultList = em.createQuery(criteria).getResultList();
+        resultList.forEach(System.out::println);
+
+
         HibernateUtil.close();
 
 

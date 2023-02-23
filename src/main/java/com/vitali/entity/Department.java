@@ -1,9 +1,6 @@
 package com.vitali.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,15 +8,17 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-
-public class Department implements Serializable {
-    public Department(String departmentName) {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table
+public class Department extends DataEntity implements Serializable {
+    public Department (String departmentName) {
         this.departmentName = departmentName;
     }
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "department_id", unique = true)
-    private Integer departmentId;
+
     @Column(name = "department_name")
     private String departmentName;
 
@@ -31,11 +30,11 @@ public class Department implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Department that = (Department) o;
-        return Objects.equals(departmentId, that.departmentId);
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(departmentId);
+        return Objects.hash(getId());
     }
 }
